@@ -29,7 +29,7 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 				password: this.password,
 				database: name
 			}
-		})
+		});
 
 		this.connections.set(name, connection);
 		return connection;

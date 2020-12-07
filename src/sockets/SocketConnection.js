@@ -25,7 +25,7 @@ module.exports = class SocketConnection {
 			const result = await serverInstance.executeQuery(query, database);
 			ack(result)
 		} catch (err) {
-			ack(null, err);
+			ack(null, err.message);
 		}
 	}
 	async handleGetTables(server, database, ack) {
@@ -37,7 +37,7 @@ module.exports = class SocketConnection {
 			return ack(tables);
 		} catch (err) {
 			console.log(err);
-			return ack(null, err);
+			return ack(null, err.message);
 		}
 	}
 	async handleGetDatabases(server, ack) {
@@ -50,7 +50,7 @@ module.exports = class SocketConnection {
 			return ack(databases);
 		} catch (err) {
 			console.log(err);
-			return ack(null, err);
+			return ack(null, err.message);
 		}
 	}
 	handleGetServers(ack) {

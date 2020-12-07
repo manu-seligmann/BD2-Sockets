@@ -1,13 +1,54 @@
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="style.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Sockets!</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+	<script src="SwitchConnection.js"></script>
+	<script src="FrontHandler.js"></script>
 	<script src="index.js"></script>
-	<link rel="stylesheet" href="style.css">
+
 </head>
 <body>
 	<h3>Is working!</h3>
+	<div class="top">
+		<div class="input-form">
+			<label for="database-server">Database Server:</label>
+			<select name="database-server" id="database-servers">
+	
+			</select>
+		</div>
+		<div class="input-form">
+			<label for="databases">Databases:</label>
+			<select name="databases" id="databases">
+				<option value="">-- Seleccione un elemento --</option>
+			</select>
+		</div>
+	</div>
+	<div class="center">
+		<div class="left-sidebar">
+			<h3>Tablas:</h3>
+			<ul id="tables">
+				
+			</ul>
+		</div>
+		<div class="content">
+			<div class="table-container">
+				<table id="output-sql">
+					<tr> <th>test a </th> <th>test b</th> <th>test c</th></tr>
+					<tr> <td>a</td> <td>b</td> <td>c </td></tr>
+				</table>
+			</div>
+			<h4>Output:</h4>
+			<textarea readonly name="output-message" id="output-message">
+	
+			</textarea>
+		</div>
+	</div>
+	<div class="bottom">
+		<input id="sql-input" type="text" placeholder="SQL">
+		<button id="sql-run">Run</button>
+	</div>
 </body>
 </html>
