@@ -16,7 +16,6 @@ class Server {
 
 	async initialize() {
 		await this.initializeDatabases();
-		await this.initializeExpress();
 		await this.initializeSocket();
 	}
 
@@ -37,21 +36,19 @@ class Server {
 		console.log('[DATABASE] All database connected')
 		
 	}
-	async initializeExpress() {
+	async initializeSocket() {
 		this.app = express();
 		const port = 3000;
 		this.app.use('/',express.static('./src/static'));
-		this.app.listen(port, () => console.log(`[WEB SERVER] Running on ${port}`));
-	}
-
-	async initializeSocket() {
-		const port = 3001;
-		const server = http.createServer();
+		const server = http.createServer(this.app);
 		this.io = socket(server);
 		server.listen(port, () => {
 			console.log(`[WEB SOCKET] Running on ${port}`);
 		});
-		this.io.on('connection', (e)=> console.log(e));
+
+		this.io.on('connection', (socket) => {
+			console.log('conectado', socket.id);
+		});
 	}
 }
 
