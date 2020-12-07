@@ -16,6 +16,9 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 
 		this.newConnection(database);
 	}
+	get name() {
+		return 'psql';
+	}
 	newConnection(name) {
 		const connection = knex({
 			client: 'pg',
@@ -58,8 +61,8 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 	}
 
 	async getTables(dbName) {
-		const queryResult = await this.getDb(dbName).raw(`SELECT * FROM pg_catalog.pg_tables`);
-		return queryResult.rows.map(row => row.schemaname);
+		const queryResult = await this.getDb(dbName).raw(`SELECT * FROM pg_catalog.pg_tables where schemaname = 'public'`);
+		return queryResult.rows.map(row => row.tablename);
 	}
 
 	async getDatabases(dbName) {

@@ -4,6 +4,7 @@ const knex = require('knex');
 const http = require('http');
 const socket = require('socket.io');
 const PostgresqlDatabase = require('./database/PostgresqlDatabase');
+const SocketConnection = require('./sockets/SocketConnection');
 
 
 class Server {
@@ -47,7 +48,9 @@ class Server {
 		});
 
 		this.io.on('connection', (socket) => {
-			console.log('conectado', socket.id);
+			const conn = new SocketConnection(socket, this.databases);
+			conn.initialzie();
+
 		});
 	}
 }
