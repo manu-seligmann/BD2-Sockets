@@ -1,33 +1,43 @@
 const knex = require('knex');
+const { Client, Query } = require('pg');
 const DatabaseConnection = require("./DatabaseConnection");
-module.exports = class PostgresqlDatabase extends DatabaseConnection {
-	constructor(name, host, port, user, password) {
-		super(name, host, port);
-		/*
-			CREATE DATABASE tpsockets;
-			CREATE USER admin;
-			alter user admin with encrypted password 'admin';
-			grant all privileges on database tpsockets to admin;
+/*
+	CREATE DATABASE tpsockets;
+	CREATE USER admin;
+	alter user admin with encrypted password 'admin';
+	grant all privileges on database tpsockets to admin;
 
-		*/
-		this.db = knex({
+*/
+module.exports = class PostgresqlDatabase extends DatabaseConnection {
+	constructor(database, host, port, user, password) {
+		super(database, host, port);
+		this.user = user;
+		this.password = password;
+
+		this.newConnection(database);
+	}
+	newConnection(name) {
+		const connection = knex({
 			client: 'pg',
 			connection: {
-				host,
-				port,
-				user,
-				password,
+				host: this.host,
+				port: this.port,
+				user: this.user,
+				password: this.password,
 				database: name
 			}
 		})
+
+		this.connections.set(name, connection);
+		return connection;
+	}
+	async testConnection(dbName) {
+		const test = await this.getDb(dbName).raw(`SELECT * FROM pg_catalog.pg_tables where schemaname='public'`);
+		return test;
 	}
 
-	async testConnection() {
-		return this.db.raw(`SELECT * FROM pg_catalog.pg_tables where schemaname='public';`);
-	}
-
-	async executeQuery(query) {
-		const queryResult = await this.db.raw(query);
+	async executeQuery(query, dbName) {
+		const queryResult = await this.getDb(dbName).raw(query);
 		const columnas = queryResult.fields.map(field => field.name);
 		const filas = queryResult.rows;
 
@@ -47,8 +57,13 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 
 	}
 
-	async getTables() {
-		const queryResult = await this.db.raw(`SELECT * FROM pg_catalog.pg_tables where schemaname='public';`);
+	async getTables(dbName) {
+		const queryResult = await this.getDb(dbName).raw(`SELECT * FROM pg_catalog.pg_tables`);
 		return queryResult.rows.map(row => row.schemaname);
+	}
+
+	async getDatabases(dbName) {
+		const queryResult = await this.getDb(dbName).raw(`SELECT datname FROM pg_database`);
+		return queryResult.rows.map(row => row.datname);
 	}
 }

@@ -1,17 +1,27 @@
 module.exports = class DatabaseConnection {
-	constructor(name, host, port) {
-		this._name = name;
+	constructor(database, host, port) {
+		this.defaultDatabase = database;
 		this._host = host;
 		this._port = port;
+		this.connections = new Map();
 	}
 	get name() {
-		return this._name;
+		return 'unset';
 	}
 	get host() {
 		return this._host;
 	}
 	get port() {
 		return this._port;
+	}
+	getDb(name) {
+		if (!name) name = this.defaultDatabase;
+		const connection = this.connections.get(name);
+		if (!connection) return this.newConnection(name);
+		else return connection;
+	}
+	newConnection(name) {
+		console.warn('Method should be overwritten');
 	}
 
 	async testConnection() {
