@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/manu-seligmann/BD2-Sockets#readme",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "knex": "^0.21.12",
     "path": "^0.12.7",

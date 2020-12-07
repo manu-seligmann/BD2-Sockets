@@ -5,6 +5,7 @@ const http = require('http');
 const socket = require('socket.io');
 const PostgresqlDatabase = require('./database/PostgresqlDatabase');
 const SocketConnection = require('./sockets/SocketConnection');
+require('dotenv').config()
 
 
 class Server {
@@ -22,7 +23,8 @@ class Server {
 
 	async initializeDatabases() {
 
-		const postgresql = new PostgresqlDatabase('tpsockets', '127.0.0.1', '5432', 'admin', 'admin')
+		const postgresql = new PostgresqlDatabase(
+			process.env.DATABASE_DB, process.env.DATABASE_HOST, process.env.DATABASE_PORT, process.env.DATABASE_USERNAME, process.env.DATABASE_PASS);
 		this.databases.push(postgresql);
 
 		// Prueba la conexión
