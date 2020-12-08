@@ -53,15 +53,20 @@ module.exports = class MysqlDatabase extends DatabaseConnection {
 
 	async getTables(dbName) {
 		const queryResult = await this.getDb(dbName).raw(`SHOW TABLES`);
+		console.log(queryResult[0]);
 		if (!Array.isArray(queryResult) || queryResult.length <= 0) return [];
 
-		return queryResult[0].map(dbRow => dbRow.Tables_in_test)
+		return queryResult[0].map(dbRow => dbRow.Tables_in_test || dbRow.Tables_in_information_schema)
 	}
 
 	async getDatabases(dbName) {
-		const queryResult = await this.getDb(dbName).raw(`SHOW DATABASES;`);
+		const queryResult = await this.getDb(dbName)
+			.raw(`select distinct(table_schema) as database_name
+				from information_schema.tables
+				where table_type = 'BASE TABLE' and table_schema not in ('information_schema','mysql', 'performance_schema','sys')
+				order by database_name;`);
 		if (!Array.isArray(queryResult) || queryResult.length <= 0) return [];
 
-		return queryResult[0].map(dbRow => dbRow.Database);
+		return queryResult[0].map(dbRow => dbRow.database_name);
 	}
 }
