@@ -50,7 +50,7 @@ class FrontHandler {
 
 		for (const table of tables) {
 			const li = document.createElement('li');
-
+			li.className="list-group-item list-group-item-action"
 			li.onclick = () => {
 				sqlInput.value =`SELECT * FROM ${table}`;
 				sqlButton.click();
@@ -66,12 +66,15 @@ class FrontHandler {
 	}
 	showMessage(msg = "", error = false) {
 		const txtArea = document.querySelector('#output-message');
-		txtArea.className = error ? "error" : "";
+		txtArea.className = error ? "form-control is-invalid" : "form-control";
 		txtArea.value = msg;
 	}
 	showTable(columnas, filas) {
-		const table = document.querySelector('#output-sql')
-		table.innerHTML = '';
+		const tableHead = document.querySelector('#output-sql thead')
+		const tableBody = document.querySelector('#output-sql tbody')
+		tableHead.innerHTML = '';
+		tableBody.innerHTML = '';
+
 		const header = document.createElement('tr');
 		header.classList.add('header');
 		for (const columna of columnas) {
@@ -79,7 +82,7 @@ class FrontHandler {
 			th.innerText = columna;
 			header.appendChild(th);
 		}
-		table.appendChild(header);
+		tableHead.appendChild(header);
 
 		for (const fila of filas) {
 			const tr = document.createElement('tr');
@@ -90,7 +93,7 @@ class FrontHandler {
 				tr.appendChild(td);
 			}
 
-			table.appendChild(tr);
+			tableBody.appendChild(tr);
 		}
 	}
 

@@ -24,7 +24,7 @@ class Server {
 	async initializeDatabases() {
 
 		const postgresql = new PostgresqlDatabase(
-			process.env.DATABASE_DB, process.env.DATABASE_HOST, process.env.DATABASE_PORT, process.env.DATABASE_USERNAME, process.env.DATABASE_PASS);
+			process.env.DATABASE_PGNAME, process.env.DATABASE_PGHOST, process.env.DATABASE_PGPORT, process.env.DATABASE_PGUSERNAME, process.env.DATABASE_PGPASS);
 		this.databases.push(postgresql);
 
 		// Prueba la conexión

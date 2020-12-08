@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap');
+:root{
+	--error: rgb(255, 139, 139);
+}
 * {
 	margin: 0;
 	padding:0;
@@ -9,15 +12,10 @@
 .top, .center {
 	display: flex;
 	flex-flow: row;
-	margin: 5px;
 }
 
-.input-form {
-	
-}
 .input-form > * {
 	display: block;
-	margin: 5px;
 }
 .center {
 	display: flex;
@@ -30,46 +28,19 @@
 	margin: 5px;
 	width: 200px;
 }
-.left-sidebar ul#tables {
-	list-style: none;
-	display: flex;
-	flex-flow: column;
-	
-}
-.left-sidebar ul#tables li {
-	width: 100%;
-	border: 1px solid transparent;
-	cursor: pointer;
-	padding: 2px 5px;
-}
-.left-sidebar ul#tables li:hover {
-	border: 1px solid rgba(0,0,0,.05);
-}
 .center .content {
 	width: 100%;
-}
-.center .content > * {
-	margin: 5px;
 }
 .center .content .table-container {
 	max-height: 70vh;
 	height: auto;
 	overflow-y: auto;
 }
-.center .content table {
-	border:1px solid black;
-	width: 100%;
-	border-collapse: collapse;
-}
-.center .content table tr {
 
-}
-.center .content table tr td,
-.center .content table tr th {
-	border: 1px solid black;
-	text-align: left;
-	padding: 2px 5px;
-}
 .center .content textarea{
 	width: 100%;
+	resize: none;
+}
+.bottom {
+	margin: 10px;
 }
