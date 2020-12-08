@@ -1,3 +1,1 @@
-- Hacer que no se resetee si se crashea (pasa con firebird no mas)
-- Que esté la opción de "otro" al seleccionar la bdd y te deje escribirla en un input
 - Crear base de datos fakes con datos de muestra

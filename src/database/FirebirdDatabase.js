@@ -64,9 +64,10 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 		if (dbName) this.options.database = dbName;
 
 		return new Promise((res, rej) => {
-			firebird.attach(this.options, function(err, db){
-				db.query(query, function(err, result){
-					if (err) return rej(err);
+			firebird.attach(this.options, function(firebirdError, db){
+				if (firebirdError) return rej(firebirdError);
+				db.query(query, function(queryError, result){
+					if (queryError) return rej(queryError);
 					res(result);
 				})
 			});
