@@ -5,6 +5,7 @@ const http = require('http');
 const socket = require('socket.io');
 const PostgresqlDatabase = require('./database/PostgresqlDatabase');
 const FirebirdDatabase = require('./database/FirebirdDatabase');
+const MysqlDatabase = require('./database/MysqlDatabase');
 const SocketConnection = require('./sockets/SocketConnection');
 require('dotenv').config()
 
@@ -46,20 +47,29 @@ class Server {
 
 		this.databases.push(firebird);
 
+		const mysql = new MysqlDatabase(
+			process.env.DATABASE_MYNAME,
+			process.env.DATABASE_MYHOST,
+			process.env.DATABASE_MYPORT,
+			process.env.DATABASE_MYUSERNAME,
+			process.env.DATABASE_MYPASS
+		);
+
+		this.databases.push(mysql);
+
 		// Prueba la conexión
 		try {
 			for (const db of this.databases) {
-				await db.testConnection().catch(err=> {
-					console.log(err);
-				});
+				await db.testConnection();
 			}
 		} catch (err) {
 			console.error(`Connection failed`, err);
 			process.exit();
 		}
-		console.log('[DATABASE] All database connected')
-		
+
+		console.log('[DATABASE] All databases connected')
 	}
+
 	async initializeSocket() {
 		this.app = express();
 		this.app.use('/',express.static('./src/static'));
@@ -75,7 +85,6 @@ class Server {
 		this.io.on('connection', (socket) => {
 			const conn = new SocketConnection(socket, this.databases);
 			conn.initialzie();
-
 		});
 	}
 }

@@ -1,8 +1,9 @@
 const knex = require('knex');
 const DatabaseConnection = require("./DatabaseConnection");
-module.exports = class PostgresqlDatabase extends DatabaseConnection {
+
+module.exports = class MysqlDatabase extends DatabaseConnection {
 	/**
-	 *Creates an instance of PostgresqlDatabase.
+	 *Creates an instance of MysqlDatabase.
 	 * @param {String} database
 	 * @param {String} host
 	 * @param {String} port
@@ -13,17 +14,16 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 		super(database, host, port);
 		this.user = user;
 		this.password = password;
-
 		this.newConnection(database);
 	}
 
 	get name() {
-		return 'psql';
+		return 'mysql';
 	}
 
 	newConnection(name) {
 		const connection = knex({
-			client: 'pg',
+			client: this.name,
 			connection: {
 				host: this.host,
 				port: this.port,
@@ -38,25 +38,30 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 	}
 
 	async testConnection(dbName) {
-		const test = await this.getDb(dbName).raw(`SELECT * FROM pg_catalog.pg_tables where schemaname='public'`);
-		return test;
+		await this.getDb(dbName).raw('select 1+1 as result');
 	}
 
 	async executeQuery(query, dbName) {
 		const queryResult = await this.getDb(dbName).raw(query);
-		const columnas = queryResult.fields.map(field => field.name);
-		const filas = queryResult.rows;
+		if (!Array.isArray(queryResult) || queryResult.length < 2) return {};
+
+		const columnas = queryResult[1].map(field => field.name);
+		const filas = queryResult[0].map(rowDataPacket => ({ ...rowDataPacket }));
 
 		return { columnas, filas };
 	}
 
 	async getTables(dbName) {
-		const queryResult = await this.getDb(dbName).raw(`SELECT * FROM pg_tables where schemaname = 'public'`);
-		return queryResult.rows.map(row => row.tablename);
+		const queryResult = await this.getDb(dbName).raw(`SHOW TABLES`);
+		if (!Array.isArray(queryResult) || queryResult.length <= 0) return [];
+
+		return queryResult[0].map(dbRow => dbRow.Tables_in_test)
 	}
 
 	async getDatabases(dbName) {
-		const queryResult = await this.getDb(dbName).raw(`SELECT * FROM pg_database WHERE datistemplate = FALSE;`);
-		return queryResult.rows.map(row => row.datname);
+		const queryResult = await this.getDb(dbName).raw(`SHOW DATABASES;`);
+		if (!Array.isArray(queryResult) || queryResult.length <= 0) return [];
+
+		return queryResult[0].map(dbRow => dbRow.Database);
 	}
 }

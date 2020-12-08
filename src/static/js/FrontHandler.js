@@ -20,7 +20,8 @@ class FrontHandler {
 	getServerName(server) {
 		const map = {
 			'psql': 'PostgreSQL',
-			'firebird': 'Firebird'
+			'firebird': 'Firebird',
+			'mysql': 'MySQL'
 		};
 		return map[server] ? map[server] : server;
 	}

@@ -26,12 +26,15 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 			if (err) throw err;
 		});
 	}
+
 	get name() {
 		return 'Firebird';
 	}
+
 	newConnection(name) {
 		
 	}
+
 	async testConnection(dbName) {
 		const test = await this.firebirdAttach(`Select * from RDB$FILES`, dbName);
 		return test;

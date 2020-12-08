@@ -20,6 +20,20 @@ services:
       ISC_PASSWORD: 'masterkey'
     volumes:
       - ./dockerInits/TPSOCKETS.DB:/firebird/data/TPSOCKETS.DB
+  mysql:
+    image: mysql
+    container_name: db_mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - '3306:3306'
+    volumes: 
+      - ./dockerInits/MySqlInit.sql:/docker-entrypoint-initdb.d/MySqlInit.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'test'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'user'
   switch:
     build: '.'
     restart: 'always'
@@ -28,3 +42,4 @@ services:
     environment:
       DATABASE_PGHOST: postgres
       DATABASE_FBHOST: firebird
+      DATABASE_MSHOST: mysql

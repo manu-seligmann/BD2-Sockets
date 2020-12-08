@@ -22,12 +22,15 @@ module.exports = class DatabaseConnection {
 	get name() {
 		return 'unset';
 	}
+
 	get host() {
 		return this._host;
 	}
+
 	get port() {
 		return this._port;
 	}
+
 	/**
 	 * Busca o crea una instancia para determinada base de datos
 	 * Si no recibe ningún parámetro, utilizará la base de datos por defecto
