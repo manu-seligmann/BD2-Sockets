@@ -6,9 +6,10 @@ services:
     ports:
       - '6543:5432'
     volumes: 
-      - ./dockerInits/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./dockerInits/PostgreSQL.sql:/docker-entrypoint-initdb.d/PostgreSQL.sql
     environment:
       POSTGRES_PASSWORD: 'admin'
+      POSTGRES_DB: 'facturacion'
   firebird:
     image: 'jacobalberty/firebird:v2.5.9-sc'
     container_name: db_firebird
@@ -31,7 +32,7 @@ services:
       - ./dockerInits/MySqlInit.sql:/docker-entrypoint-initdb.d/MySqlInit.sql
     environment:
       MYSQL_ROOT_PASSWORD: 'root'
-      MYSQL_DATABASE: 'test'
+      MYSQL_DATABASE: 'universidad'
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'user'
   switch:

@@ -44,9 +44,15 @@ module.exports = class MysqlDatabase extends DatabaseConnection {
 	async executeQuery(query, dbName) {
 		const queryResult = await this.getDb(dbName).raw(query);
 		if (!Array.isArray(queryResult) || queryResult.length < 2) return {};
+		
+		const columnas = []
+		if (Array.isArray(queryResult[1]))
+			for (const columna of queryResult[1] ) {
+				if (columnas.indexOf(columna.name) <= -1)
+					columnas.push(columna.name);
+			}
 
-		const columnas = queryResult[1].map(field => field.name);
-		const filas = queryResult[0].map(rowDataPacket => ({ ...rowDataPacket }));
+		const filas = Array.isArray(queryResult[0]) ? queryResult[0].map(rowDataPacket => ({ ...rowDataPacket })) : [];
 
 		return { columnas, filas };
 	}

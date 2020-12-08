@@ -1,5 +1,5 @@
 create table Cliente (id int primary key NOT null, nombre varchar(40), apellido varchar(60));
-create table Factura (numero int primary key NOT null, idc int references Cliente(idc), monto money);
+create table Factura (numero int primary key NOT null, idc int references Cliente(id), monto money);
 create table  Producto (id int primary key NOT null, nombre varchar(40), descripcion varchar(100), stock int);
 create table Detalle (numero int NOT null references Factura(numero), idp int not null references Producto(id), cantidad int, primary key(numero, idp));
 
