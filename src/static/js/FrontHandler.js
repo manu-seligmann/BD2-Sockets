@@ -43,6 +43,11 @@ class FrontHandler {
 		}
 	}
 
+	resetOtherDataBaseInput() {
+		const element = document.getElementById('other-database-input');
+		if (element) element.value = "";
+	}
+
 	showTables(tables) {
 		const list = document.querySelector('#tables');
 		list.innerHTML = '';
@@ -53,6 +58,8 @@ class FrontHandler {
 		for (const table of tables) {
 			const li = document.createElement('li');
 			li.className="list-group-item list-group-item-action"
+			li.style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis"
+			li.setAttribute("title", table);
 			li.onclick = () => {
 				sqlInput.value =`SELECT * FROM ${table.replace(/\n/,'').replace(/\s{2,}/, ' ')}`;
 				sqlButton.click();

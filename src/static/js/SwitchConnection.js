@@ -41,6 +41,7 @@ class SwitchConnection {
 			const databases = await this.asyncEmit('getDatabases', server);
 			this.selectedServer = server;
 			this.frontHandler.refreshDatabases(databases);
+			this.frontHandler.resetOtherDataBaseInput();
 		} catch (err) {
 			this.frontHandler.refreshDatabases([]);
 			this.frontHandler.showMessage(err, true);
