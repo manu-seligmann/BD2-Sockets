@@ -68,10 +68,11 @@ class FrontHandler {
 		this.showMessage(mensaje || "ok");
 	}
 
-	showMessage(msg = "", error = false) {
+	showMessage(msg = "", error = false, timestamp) {
 		const txtArea = document.querySelector('#output-message');
+		if (!timestamp) timestamp = new Date();
 		txtArea.className = error ? "form-control is-invalid" : "form-control";
-		txtArea.value = msg;
+		txtArea.value = `${this.dateParser(timestamp)}: ${msg}`;
 	}
 
 	showTable(columnas, filas) {
@@ -114,5 +115,22 @@ class FrontHandler {
 		const element = document.querySelector(elementQuery);
 		if (element) element.addEventListener(event, callback);
 		else throw new Error(`${elementQuery} no existe`);
+	}
+
+	dateParser(date) {
+		if (!date instanceof Date) date = new Date(date);
+		function doubleDigit(num) {
+			return parseInt(num) > 9 ? String(num) : `0${String(num)}`;
+		}
+
+		let day = doubleDigit(date.getDate());
+		let month = doubleDigit(date.getMonth());
+		let year = doubleDigit(date.getFullYear());
+
+		let hours = doubleDigit(date.getHours());
+		let minutes = doubleDigit(date.getMinutes());
+		let seconds = doubleDigit(date.getSeconds());
+
+		return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 	}
 }

@@ -11,8 +11,14 @@ class SwitchConnection {
 
 		this.frontHandler.registerEvent('#database-servers', 'change', e => this.selectDatabaseServer(e.target.value));
 		this.frontHandler.registerEvent('#databases', 'change', e => this.selectDatabase(e.target.value));
+		
+		this.frontHandler.registerEvent('#other-database', 'click',e => this.selectDatabase(document.querySelector('#other-database-input').value));
+		this.frontHandler.registerEvent('#other-database-input', 'keydown', e => e.keyCode === 13 && this.selectDatabase(e.target.value));
+		
 		this.frontHandler.registerEvent('#sql-run', 'click', e => this.executeQuery(document.querySelector('#sql-input').value));
 		this.frontHandler.registerEvent('#sql-input', 'keydown', e => e.keyCode === 13 && this.executeQuery(document.querySelector('#sql-input').value));
+
+		this.frontHandler.registerEvent('#reload-tables', 'click', e => this.reloadTables());
 	}
 	
 	async handleDisconnect() {
@@ -41,11 +47,23 @@ class SwitchConnection {
 			console.error(err);
 		}
 	}
-	async selectDatabase(database) {
+	async selectDatabase(database, external) {
 		if (!this.selectedServer) return this.frontHandler.showMessage('Debe seleccionar un servidor', true);
 		try {
 			const tables = await this.asyncEmit('getTables', this.selectedServer, database);
 			this.selectedDatabase = database;
+			this.frontHandler.showTables(tables);
+		} catch (err) {
+			this.frontHandler.showMessage(err, true);
+			console.error(err);
+		}
+	}
+
+	async reloadTables() {
+		if (!this.selectedServer) return this.frontHandler.showMessage('Debe seleccionar un servidor', true);
+		if (!this.selectedDatabase) return this.frontHandler.showMessage('Debe seleccionar una base de datos', true);
+		try {
+			const tables = await this.asyncEmit('getTables', this.selectedServer, this.selectedDatabase);
 			this.frontHandler.showTables(tables);
 		} catch (err) {
 			this.frontHandler.showMessage(err, true);
@@ -58,12 +76,13 @@ class SwitchConnection {
 		if (!this.selectedDatabase) return this.frontHandler.showMessage('Debe seleccionar una base de datos', true);
 		try {
 			const response = await this.asyncEmit('executeQuery', this.selectedServer, this.selectedDatabase, query);
-			this.frontHandler.showResults(response);
+			this.frontHandler.showResults({...response, mensaje: `${query} - OK`});
 		} catch (err) {
 			this.frontHandler.showMessage(err, true);
 			console.error(err);
 		}
 	}
+
 
 	async asyncEmit(...params) {
 		return new Promise((res, rej) => {
@@ -73,4 +92,5 @@ class SwitchConnection {
 			});
 		});
 	}
+
 }
