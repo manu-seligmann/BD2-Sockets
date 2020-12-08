@@ -4,6 +4,7 @@ const knex = require('knex');
 const http = require('http');
 const socket = require('socket.io');
 const PostgresqlDatabase = require('./database/PostgresqlDatabase');
+const FirebirdDatabase = require('./database/FirebirdDatabase');
 const SocketConnection = require('./sockets/SocketConnection');
 require('dotenv').config()
 
@@ -22,10 +23,13 @@ class Server {
 	}
 
 	async initializeDatabases() {
-
 		const postgresql = new PostgresqlDatabase(
 			process.env.DATABASE_PGNAME, process.env.DATABASE_PGHOST, process.env.DATABASE_PGPORT, process.env.DATABASE_PGUSERNAME, process.env.DATABASE_PGPASS);
-		this.databases.push(postgresql);
+
+		const firebird = new FirebirdDatabase(
+			process.env.DATABASE_FBNAME, process.env.DATABASE_FBHOST, process.env.DATABASE_FBPORT, process.env.DATABASE_FBUSERNAME, process.env.DATABASE_FBPASS);
+
+		this.databases.push(postgresql, firebird);
 
 		// Prueba la conexión
 		try {
