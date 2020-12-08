@@ -55,7 +55,7 @@ module.exports = class MysqlDatabase extends DatabaseConnection {
 		const queryResult = await this.getDb(dbName).raw(`SHOW TABLES`);
 		if (!Array.isArray(queryResult) || queryResult.length <= 0) return [];
 
-		return queryResult[0].map(dbRow => dbRow.Tables_in_test || dbRow.Tables_in_information_schema)
+		return queryResult[0].map(dbRow => dbRow[Object.keys(dbRow)[0]] || 'unknown')
 	}
 
 	async getDatabases(dbName) {
