@@ -9,6 +9,7 @@ class FrontHandler {
 
 		for (const server of servers) {
 			const option = document.createElement('option');
+
 			option.innerText = this.getServerName(server);
 			option.value = server;
 
@@ -18,7 +19,8 @@ class FrontHandler {
 
 	getServerName(server) {
 		const map = {
-			'psql': 'PostgreSQL'
+			'psql': 'PostgreSQL',
+			'firebird': 'Firebird'
 		};
 		return map[server] ? map[server] : server;
 	}
@@ -47,7 +49,6 @@ class FrontHandler {
 		const sqlInput = document.querySelector('#sql-input');
 		const sqlButton = document.querySelector('#sql-run');
 
-
 		for (const table of tables) {
 			const li = document.createElement('li');
 			li.className="list-group-item list-group-item-action"
@@ -59,29 +60,35 @@ class FrontHandler {
 			list.appendChild(li);
 		}
 	}
+
 	showResults(result) {
 		const { filas, columnas, mensaje } = result;
 		if (filas && columnas) this.showTable(columnas, filas);
-		this.showMessage(mensaje);
+		this.showMessage(mensaje || "ok");
 	}
+
 	showMessage(msg = "", error = false) {
 		const txtArea = document.querySelector('#output-message');
 		txtArea.className = error ? "form-control is-invalid" : "form-control";
 		txtArea.value = msg;
 	}
+
 	showTable(columnas, filas) {
 		const tableHead = document.querySelector('#output-sql thead')
 		const tableBody = document.querySelector('#output-sql tbody')
+
 		tableHead.innerHTML = '';
 		tableBody.innerHTML = '';
 
 		const header = document.createElement('tr');
 		header.classList.add('header');
+
 		for (const columna of columnas) {
 			const th = document.createElement('th');
 			th.innerText = columna;
 			header.appendChild(th);
 		}
+
 		tableHead.appendChild(header);
 
 		for (const fila of filas) {
@@ -95,6 +102,11 @@ class FrontHandler {
 
 			tableBody.appendChild(tr);
 		}
+	}
+
+	lostConnection(active) {
+		const alert = document.querySelector('.error');
+		alert.style.display = active ? 'block': 'none';
 	}
 
 	registerEvent(elementQuery, event, callback) {

@@ -7,17 +7,23 @@ class SwitchConnection {
 	}
 	initialize() {
 		this.socket.on('connect', this.handleConnection.bind(this));
+		this.socket.on('disconnect', this.handleDisconnect.bind(this));
 
 		this.frontHandler.registerEvent('#database-servers', 'change', e => this.selectDatabaseServer(e.target.value));
 		this.frontHandler.registerEvent('#databases', 'change', e => this.selectDatabase(e.target.value));
 		this.frontHandler.registerEvent('#sql-run', 'click', e => this.executeQuery(document.querySelector('#sql-input').value));
 		this.frontHandler.registerEvent('#sql-input', 'keydown', e => e.keyCode === 13 && this.executeQuery(document.querySelector('#sql-input').value));
 	}
+	
+	async handleDisconnect() {
+		this.frontHandler.lostConnection(true);
+	}
+
 	async handleConnection() {
+		this.frontHandler.lostConnection(false);
 		this.online = true;
 		const servers = await this.asyncEmit('getServers')
 		this.servers = servers;
-		
 		this.frontHandler.refreshDatabasesServers(this.servers);
 	}
 

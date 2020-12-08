@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap'); */
 :root{
 	--error: rgb(255, 139, 139);
 }
@@ -20,8 +20,6 @@
 .center {
 	display: flex;
 	width: 100%;
-	/* justify-content: center; */
-
 }
 
 .left-sidebar {

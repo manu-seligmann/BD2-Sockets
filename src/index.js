@@ -10,7 +10,10 @@ require('dotenv').config()
 
 
 class Server {
-	
+	/**
+	 *Creates an instance of Server.
+	 * @memberof Server
+	 */
 	constructor() {
 		this.databases = [];
 		this.io = null;
@@ -24,17 +27,31 @@ class Server {
 
 	async initializeDatabases() {
 		const postgresql = new PostgresqlDatabase(
-			process.env.DATABASE_PGNAME, process.env.DATABASE_PGHOST, process.env.DATABASE_PGPORT, process.env.DATABASE_PGUSERNAME, process.env.DATABASE_PGPASS);
+			process.env.DATABASE_PGNAME,
+			process.env.DATABASE_PGHOST,
+			process.env.DATABASE_PGPORT,
+			process.env.DATABASE_PGUSERNAME,
+			process.env.DATABASE_PGPASS
+		);
+
+		this.databases.push(postgresql);
 
 		const firebird = new FirebirdDatabase(
-			process.env.DATABASE_FBNAME, process.env.DATABASE_FBHOST, process.env.DATABASE_FBPORT, process.env.DATABASE_FBUSERNAME, process.env.DATABASE_FBPASS);
+			process.env.DATABASE_FBNAME,
+			process.env.DATABASE_FBHOST,
+			process.env.DATABASE_FBPORT,
+			process.env.DATABASE_FBUSERNAME,
+			process.env.DATABASE_FBPASS
+		);
 
-		this.databases.push(postgresql, firebird);
+		this.databases.push(firebird);
 
 		// Prueba la conexión
 		try {
 			for (const db of this.databases) {
-				await db.testConnection();
+				await db.testConnection().catch(err=> {
+					console.log(err);
+				});
 			}
 		} catch (err) {
 			console.error(`Connection failed`, err);
@@ -45,9 +62,11 @@ class Server {
 	}
 	async initializeSocket() {
 		this.app = express();
-		const port = 3000;
 		this.app.use('/',express.static('./src/static'));
+
 		const server = http.createServer(this.app);
+		const port = process.env.WEB_PORT || 3000;
+
 		this.io = socket(server);
 		server.listen(port, () => {
 			console.log(`[WEB SOCKET] Running on ${port}`);

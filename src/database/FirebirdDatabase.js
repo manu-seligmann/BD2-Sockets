@@ -1,15 +1,14 @@
 const firebird = require('node-firebird');
-const { resolve } = require('path');
-const { Client, Query } = require('pg');
 const DatabaseConnection = require("./DatabaseConnection");
-/*
-	CREATE DATABASE tpsockets;
-	CREATE USER admin;
-	alter user admin with encrypted password 'admin';
-	grant all privileges on database tpsockets to admin;
-
-*/
 module.exports = class PostgresqlDatabase extends DatabaseConnection {
+	 /**
+	 *Creates an instance of PostgresqlDatabase.
+	 * @param {String} database
+	 * @param {String} host
+	 * @param {String} port
+	 * @param {String} user
+	 * @param {String} password
+	 */
 	constructor(database, host, port, user, password) {
 		super(database, host, port);
 		this.user = user;
@@ -17,6 +16,7 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 
 		this.options = {
 			host,
+			port,
 			database,
 			user,
 			password,

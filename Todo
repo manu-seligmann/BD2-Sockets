@@ -1,0 +1,4 @@
+- Hacer que no se resetee si se crashea
+- Hacer que aparezca offline en el front si no está corriendo el server
+- Que esté la opción de "otro" al seleccionar la bdd y te deje escribirla en un input
+- Crear base de datos fakes con datos de muestra

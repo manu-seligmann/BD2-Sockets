@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: 'postgres'
+    container_name: db_postgres
+    restart: 'always'
+    ports:
+      - '6543:5432'
+    volumes: 
+      - ./dockerInits/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_PASSWORD: 'admin'
+  firebird:
+    image: 'jacobalberty/firebird:v2.5.9-sc'
+    container_name: db_firebird
+    restart: 'always'
+    ports:
+      - '3355:3050'
+    environment:
+      FIREBIRD_DATABASE: 'test'
+      ISC_PASSWORD: 'masterkey'
+    volumes:
+      - ./dockerInits/TPSOCKETS.DB:/firebird/data/TPSOCKETS.DB
+  switch:
+    build: '.'
+    restart: 'always'
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_PGHOST: postgres
+      DATABASE_FBHOST: firebird

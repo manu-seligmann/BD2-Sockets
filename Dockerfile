@@ -1,0 +1,29 @@
+FROM node:12
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+ENV DATABASE_WEBPORT=3000
+
+# === Database ===
+# = PostgreSQL =
+ENV DATABASE_PGNAME=postgres
+ENV DATABASE_PGHOST=postgres
+ENV DATABASE_PGPORT=5432
+ENV DATABASE_PGUSERNAME=postgres
+ENV DATABASE_PGPASS=admin
+
+# = Firebird =
+ENV DATABASE_FBNAME=/firebird/data/TPSOCKETS.DB
+ENV DATABASE_FBHOST=firebird
+ENV DATABASE_FBPORT=3050
+ENV DATABASE_FBUSERNAME=SYSDBA
+ENV DATABASE_FBPASS=masterkey
+
+CMD ["npm","run", "prod"]
