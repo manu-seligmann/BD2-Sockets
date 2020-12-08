@@ -54,7 +54,7 @@ class FrontHandler {
 			const li = document.createElement('li');
 			li.className="list-group-item list-group-item-action"
 			li.onclick = () => {
-				sqlInput.value =`SELECT * FROM ${table}`;
+				sqlInput.value =`SELECT * FROM ${table.replace(/\n/,'').replace(/\s{2,}/, ' ')}`;
 				sqlButton.click();
 			}
 			li.innerText = table;
