@@ -43,6 +43,7 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 	async executeQuery(query, dbName) {
 		const queryResult = await this.firebirdAttach(query, dbName);
 
+		if (!queryResult) return {};
 		let columnas = [];
 		if (Array.isArray(queryResult) && queryResult.length > 0){
 			for (const key in queryResult[0]){
