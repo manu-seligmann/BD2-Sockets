@@ -26,6 +26,9 @@
 	margin: 5px;
 	width: 200px;
 }
+.left-sidebar ul li {
+	cursor: pointer;
+}
 .center .content {
 	width: 100%;
 }
