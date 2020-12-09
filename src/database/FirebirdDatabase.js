@@ -71,14 +71,15 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 	}
 
 	async firebirdAttach(query, dbName = null){
-		if (dbName) this.options.database = dbName;
-
 		return new Promise((res, rej) => {
-			firebird.attach(this.options, function(firebirdError, db){
-				if (firebirdError) return rej(firebirdError);
-				db.query(query, function(queryError, result){
-					if (queryError) return rej(queryError);
-					res(result);
+			firebird.attach({
+				...this.options, 
+				database: dbName || this.options.database },
+				function(firebirdError, db){
+					if (firebirdError) return rej(firebirdError);
+					db.query(query, function(queryError, result){
+						if (queryError) return rej(queryError);
+						res(result);
 				})
 			});
 		})
