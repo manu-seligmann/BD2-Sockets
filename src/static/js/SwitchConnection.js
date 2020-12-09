@@ -4,6 +4,11 @@ class SwitchConnection {
 		this.online = false;
 		this.servers = [];
 		this.frontHandler = frontHandler;
+
+		this.databases = [];
+
+		this.selectedServer = null;
+		this.selectedDatabase = null;
 	}
 	initialize() {
 		this.socket.on('connect', this.handleConnection.bind(this));
@@ -12,8 +17,8 @@ class SwitchConnection {
 		this.frontHandler.registerEvent('#database-servers', 'change', e => this.selectDatabaseServer(e.target.value));
 		this.frontHandler.registerEvent('#databases', 'change', e => this.selectDatabase(e.target.value));
 		
-		this.frontHandler.registerEvent('#other-database', 'click',e => this.selectDatabase(document.querySelector('#other-database-input').value));
-		this.frontHandler.registerEvent('#other-database-input', 'keydown', e => e.keyCode === 13 && this.selectDatabase(e.target.value));
+		this.frontHandler.registerEvent('#other-database', 'click',e => this.selectDatabase(document.querySelector('#other-database-input').value, true));
+		this.frontHandler.registerEvent('#other-database-input', 'keydown', e => e.keyCode === 13 && this.selectDatabase(e.target.value, true));
 		
 		this.frontHandler.registerEvent('#sql-run', 'click', e => this.executeQuery(document.querySelector('#sql-input').value));
 		this.frontHandler.registerEvent('#sql-input', 'keydown', e => e.keyCode === 13 && this.executeQuery(document.querySelector('#sql-input').value));
@@ -40,8 +45,11 @@ class SwitchConnection {
 
 			const databases = await this.asyncEmit('getDatabases', server);
 			this.selectedServer = server;
+			this.databases = databases;
 			this.frontHandler.refreshDatabases(databases);
 			this.frontHandler.resetOtherDataBaseInput();
+			this.frontHandler.showTables([]);
+			this.clearOutput();
 		} catch (err) {
 			this.frontHandler.refreshDatabases([]);
 			this.frontHandler.showMessage(err, true);
@@ -50,11 +58,17 @@ class SwitchConnection {
 	}
 	async selectDatabase(database, external) {
 		if (!this.selectedServer) return this.frontHandler.showMessage('Debe seleccionar un servidor', true);
+		this.clearOutput();
 		try {
 			const tables = await this.asyncEmit('getTables', this.selectedServer, database);
 			this.selectedDatabase = database;
 			this.frontHandler.showTables(tables);
+
+			if (external) this.frontHandler.changeSelectedDatabase(database);
+			else this.frontHandler.resetOtherDataBaseInput();
+			
 		} catch (err) {
+			this.frontHandler.showTables([]);
 			this.frontHandler.showMessage(err, true);
 			console.error(err);
 		}
@@ -93,5 +107,8 @@ class SwitchConnection {
 			});
 		});
 	}
-
+	clearOutput() {
+		this.frontHandler.showMessage();
+		this.frontHandler.showTable([], []);
+	}
 }

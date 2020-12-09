@@ -5,6 +5,9 @@ class FrontHandler {
 
 		const unselected = document.createElement('option');
 		unselected.innerText = '-- Seleccione un elemento --';
+		unselected.setAttribute('disabled', true);
+		unselected.setAttribute('selected', true);
+		unselected.value="__default";
 		select.appendChild(unselected);
 
 		for (const server of servers) {
@@ -32,6 +35,9 @@ class FrontHandler {
 
 		const unselected = document.createElement('option');
 		unselected.innerText = '-- Seleccione un elemento --';
+		unselected.setAttribute('disabled', true);
+		unselected.setAttribute('selected', true);
+		unselected.value="__default";
 		select.appendChild(unselected);
 
 		for (const db of databases) {
@@ -46,6 +52,18 @@ class FrontHandler {
 	resetOtherDataBaseInput() {
 		const element = document.getElementById('other-database-input');
 		if (element) element.value = "";
+	}
+
+	changeSelectedDatabase(val) {
+		const select = document.querySelector('#databases');
+		const options = Array.from(document.querySelectorAll('#databases option')).map(option => option.value);
+
+		if (select) {
+			if (options.indexOf(val) !== -1)
+				select.value = val;
+			else 
+				select.value = "__default"
+		}
 	}
 
 	showTables(tables) {
@@ -77,8 +95,12 @@ class FrontHandler {
 
 	showMessage(msg = "", error = false, timestamp) {
 		const txtArea = document.querySelector('#output-message');
-		if (!timestamp) timestamp = new Date();
 		txtArea.className = error ? "form-control is-invalid" : "form-control";
+		if (!msg) {
+			txtArea.value="";
+			return;
+		}
+		if (!timestamp) timestamp = new Date();
 		txtArea.value = `${this.dateParser(timestamp)}: ${msg}`;
 	}
 
