@@ -58,6 +58,7 @@ class SwitchConnection {
 	}
 	async selectDatabase(database, external) {
 		if (!this.selectedServer) return this.frontHandler.showMessage('Debe seleccionar un servidor', true);
+		if (!database) return;
 		this.clearOutput();
 		try {
 			const tables = await this.asyncEmit('getTables', this.selectedServer, database);
