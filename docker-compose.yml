@@ -20,7 +20,7 @@ services:
       FIREBIRD_DATABASE: 'test'
       ISC_PASSWORD: 'masterkey'
     volumes:
-      - ./dockerInits/TPSOCKETS.DB:/firebird/data/TPSOCKETS.DB
+      - ./dockerInits/FOOTBALL.DB:/firebird/data/FOOTBALL.DB
   mysql:
     image: mysql
     container_name: db_mysql

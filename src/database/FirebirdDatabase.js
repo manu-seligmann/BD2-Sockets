@@ -49,7 +49,17 @@ module.exports = class PostgresqlDatabase extends DatabaseConnection {
 				columnas.push(key);
 			}
 		}
-		const filas = queryResult;
+		
+		const filas = queryResult.map(row => {
+			let result = {};
+			for (const column in row ) {
+				const val = row[column];
+				if (typeof val === 'object' && val instanceof Buffer) {
+					result[column] = val.toString();
+				} else result[column] = val;
+			}
+			return result;
+		});
 
 		return { columnas, filas };
 	}
