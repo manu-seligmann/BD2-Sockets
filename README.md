@@ -22,4 +22,5 @@ npm install
 3. Ejecutar `npm run start` para iniciar el servidor switch.
 
 #### Notas:
-En caso de querer recrear las bases de datos utilizadas en la carpeta `dockerInits` se encuentran los scripts correspondientes para crear cada una.
+* En caso de querer recrear las bases de datos utilizadas en la carpeta `dockerInits` se encuentran los scripts correspondientes para crear cada una.
+* Es necesario que el servidor Switch corra una vez ya estén los servidores. En el caso de que se utilice Docker, el servidor se reiniciará hasta que estén corriendo todos los servidores correctamente.
