@@ -7,14 +7,14 @@
 ### Instalación
 
 #### Con Docker:
-Es necesario tener docker y docker compose y ejecutar:
+Es necesario tener docker y docker compose y ejecutar en el directorio del proyecto:
 ```
 docker-compose up
 ```
 #### Sin Docker:
 * **Se requiere tener instalado NodeJS**
 
-1. Correr el siguiente comando para instalar todas las dependencias:
+1. Correr el siguiente comando para instalar todas las dependencias dentro del directorio del proyecto:
 ```
 npm install
 ```
